@@ -1,0 +1,370 @@
+{
+  "info": {
+    "name": "Expense Tracker API (Flow-friendly)",
+    "_postman_id": "f18b776f-20be-4529-815e-23c39f9dba5f",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Healthcheck",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/healthcheck",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "healthcheck"
+          ]
+        }
+      }
+    },
+    {
+      "name": "Create user",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/user",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "user"
+          ]
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"name\": \"Ivan\",\n  \"email\": \"ivan@example.com\"\n}"
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('status is 200/201', function () { pm.expect([200,201]).to.include(pm.response.code); });",
+              "const json = pm.response.json();",
+              "const id = json?.id ?? json?.user_id ?? json?.userId;",
+              "if (id !== undefined && id !== null) {",
+              "  pm.environment.set('userId', String(id));",
+              "  pm.collectionVariables.set('userId', String(id));",
+              "}"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Get user by id",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/user/{{userId}}",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "user",
+            "{{userId}}"
+          ]
+        }
+      }
+    },
+    {
+      "name": "Delete user by id",
+      "request": {
+        "method": "DELETE",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/user/{{userId}}",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "user",
+            "{{userId}}"
+          ]
+        }
+      }
+    },
+    {
+      "name": "Get users",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/users",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "users"
+          ]
+        }
+      }
+    },
+    {
+      "name": "Get categories",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/category",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "category"
+          ]
+        }
+      }
+    },
+    {
+      "name": "Create category",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/category",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "category"
+          ]
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"name\": \"Food\"\n}"
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('status is 200/201', function () { pm.expect([200,201]).to.include(pm.response.code); });",
+              "const json = pm.response.json();",
+              "const id = json?.id ?? json?.category_id ?? json?.categoryId;",
+              "if (id !== undefined && id !== null) {",
+              "  pm.environment.set('categoryId', String(id));",
+              "  pm.collectionVariables.set('categoryId', String(id));",
+              "}"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Delete category (by query param)",
+      "request": {
+        "method": "DELETE",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/category?category_id={{categoryId}}",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "category"
+          ],
+          "query": [
+            {
+              "key": "category_id",
+              "value": "{{categoryId}}"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "Create record",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/record",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "record"
+          ]
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"user_id\": {{userId}},\n  \"category_id\": {{categoryId}},\n  \"amount\": 123.45,\n  \"comment\": \"Lunch\"\n}"
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('status is 200/201', function () { pm.expect([200,201]).to.include(pm.response.code); });",
+              "const json = pm.response.json();",
+              "const id = json?.id ?? json?.record_id ?? json?.recordId;",
+              "if (id !== undefined && id !== null) {",
+              "  pm.environment.set('recordId', String(id));",
+              "  pm.collectionVariables.set('recordId', String(id));",
+              "}"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Get record by id",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/record/{{recordId}}",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "record",
+            "{{recordId}}"
+          ]
+        }
+      }
+    },
+    {
+      "name": "Delete record by id",
+      "request": {
+        "method": "DELETE",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/record/{{recordId}}",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "record",
+            "{{recordId}}"
+          ]
+        }
+      }
+    },
+    {
+      "name": "Query records (by user)",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/record?user_id={{userId}}",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "record"
+          ],
+          "query": [
+            {
+              "key": "user_id",
+              "value": "{{userId}}"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "Query records (by category)",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/record?category_id={{categoryId}}",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "record"
+          ],
+          "query": [
+            {
+              "key": "category_id",
+              "value": "{{categoryId}}"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "Query records (user + category)",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/record?user_id={{userId}}&category_id={{categoryId}}",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "record"
+          ],
+          "query": [
+            {
+              "key": "user_id",
+              "value": "{{userId}}"
+            },
+            {
+              "key": "category_id",
+              "value": "{{categoryId}}"
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:8000",
+      "type": "string"
+    },
+    {
+      "key": "userId",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "categoryId",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "recordId",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "accessToken",
+      "value": "",
+      "type": "string"
+    }
+  ]
+}

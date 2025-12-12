@@ -1,0 +1,35 @@
+{
+  "name": "Expense Tracker - Prod",
+  "values": [
+    {
+      "key": "baseUrl",
+      "value": "https://backendlabs-menr.onrender.com",
+      "type": "default",
+      "enabled": true
+    },
+    {
+      "key": "userId",
+      "value": "",
+      "type": "default",
+      "enabled": true
+    },
+    {
+      "key": "categoryId",
+      "value": "",
+      "type": "default",
+      "enabled": true
+    },
+    {
+      "key": "recordId",
+      "value": "",
+      "type": "default",
+      "enabled": true
+    },
+    {
+      "key": "accessToken",
+      "value": "",
+      "type": "default",
+      "enabled": true
+    }
+  ]
+}
