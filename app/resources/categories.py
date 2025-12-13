@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from flask import request
+from flask_jwt_extended import jwt_required
 from flask_restful import Resource
 
 from ..store import store, serialize
@@ -8,6 +9,8 @@ from .common import get_json
 
 
 class CategoryResource(Resource):
+    method_decorators = [jwt_required()]
+
     def get(self):
         return [serialize(c) for c in store.list_categories()], 200
 

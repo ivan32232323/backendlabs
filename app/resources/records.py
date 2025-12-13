@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from flask import request
+from flask_jwt_extended import jwt_required
 from flask_restful import Resource
 
 from ..store import store, serialize
@@ -8,6 +9,8 @@ from .common import get_json
 
 
 class RecordItemResource(Resource):
+    method_decorators = [jwt_required()]
+
     def get(self, record_id: int):
         record = store.get_record(record_id)
         if not record:
@@ -21,6 +24,8 @@ class RecordItemResource(Resource):
 
 
 class RecordCollectionResource(Resource):
+    method_decorators = [jwt_required()]
+
     def post(self):
         data = get_json()
         user_id = data.get("user_id")

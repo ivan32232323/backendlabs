@@ -4,11 +4,14 @@ from dataclasses import dataclass, asdict
 from datetime import datetime, timezone
 from typing import Dict, List, Optional
 
+from passlib.hash import pbkdf2_sha256
+
 
 @dataclass
 class User:
     id: int
-    name: str
+    username: str
+    password: str  # hashed
 
 
 @dataclass
@@ -36,14 +39,31 @@ class InMemoryStore:
         self.records: Dict[int, Record] = {}
 
     # Users
-    def create_user(self, name: str) -> User:
+    def create_user(self, username: str, password_plain: str) -> User:
+        if self.get_user_by_username(username) is not None:
+            raise ValueError("username_taken")
+
         self._user_id += 1
-        user = User(id=self._user_id, name=name)
+        user = User(
+            id=self._user_id,
+            username=username,
+            password=pbkdf2_sha256.hash(password_plain),
+        )
         self.users[user.id] = user
         return user
 
     def get_user(self, user_id: int) -> Optional[User]:
         return self.users.get(user_id)
+
+    def get_user_by_username(self, username: str) -> Optional[User]:
+        username_l = username.lower()
+        for u in self.users.values():
+            if u.username.lower() == username_l:
+                return u
+        return None
+
+    def verify_password(self, user: User, password_plain: str) -> bool:
+        return pbkdf2_sha256.verify(password_plain, user.password)
 
     def delete_user(self, user_id: int) -> bool:
         if user_id in self.users:
@@ -117,4 +137,7 @@ store = InMemoryStore()
 
 
 def serialize(obj):
-    return asdict(obj)
+    data = asdict(obj)
+    # never expose password hash
+    data.pop("password", None)
+    return data
