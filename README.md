@@ -29,6 +29,35 @@
 
 ![Lab 2 Postman Flow](assets/lab2.png)
 
+## Функціонал (ЛР4) — JWT авторизація
+
+У ЛР4 додається авторизація через JWT:
+- `POST /user` — реєстрація (username/password), пароль зберігається як hash
+- `POST /login` — логін, повертає `access_token`
+
+Усі інші ендпоінти (users/category/record) захищені та потребують:
+- Header: `Authorization: Bearer <token>`
+
+### Налаштування JWT
+Потрібна змінна середовища:
+- `JWT_SECRET_KEY` — секрет для підпису токенів
+
+Приклад запуску:
+```bash
+JWT_SECRET_KEY="change-me" docker compose up --build
+```
+
+### Postman (ЛР4)
+1) Виконай `Login`
+2) Збережи токен в `accessToken`
+3) Виконуй запити з Bearer token
+
+## Скріншот Flow (ЛР4)
+
+> Postman Flow, який демонструє Register → Login → protected requests (Bearer token) та використання змінних `userId/categoryId/recordId`.
+
+![Lab 4 Postman Flow](assets/lab4.png)
+
 ## Запуск
 
 ### Docker Compose
@@ -55,40 +84,23 @@ python -m flask --app main.py run --host 0.0.0.0 --port 8000
 
 У папці `postman/` є:
 - колекції запитів (ЛР2 / ЛР4)
-- environment для `baseUrl`
+- environment для `baseUrl`, а для ЛР4 також `accessToken`
 
-Перед запуском:
+Перед запуском (ЛР2):
 1) Import collection
 2) Import environment
 3) Переконайся, що `baseUrl = http://localhost:8000`
 4) Виконай `Create user` → `Create category` → `Create record`
 
-## Функціонал (ЛР4) — JWT авторизація
-
-У ЛР4 додається авторизація через JWT:
-- `POST /user` — реєстрація (username/password), пароль зберігається як hash
-- `POST /login` — логін, повертає `access_token`
-
-Усі інші ендпоінти (users/category/record) захищені та потребують:
-- Header: `Authorization: Bearer <token>`
-
-### Налаштування JWT
-Потрібна змінна середовища:
-- `JWT_SECRET_KEY` — секрет для підпису токенів
-
-Приклад запуску:
-```bash
-JWT_SECRET_KEY="change-me" docker compose up --build
-```
-
-### Postman (ЛР4)
-1) Виконай `Login`
-2) Збережи токен в `accessToken`
-3) Виконуй запити з Bearer token
+Перед запуском (ЛР4):
+1) Import collection (Lab 4)
+2) Import environment
+3) Виконай `Register` → `Login` (токен збережеться в `accessToken`)
+4) Далі запускай будь-які protected запити
 
 ## Структура проєкту
 
 - `main.py` — точка входу
 - `app/` — ресурси/логіка
 - `postman/` — колекції та environments
-- `assets/` — зображення для звіту/README
+- `assets/` — зображення для звіту/README (`lab2.png`, `lab4.png`)
